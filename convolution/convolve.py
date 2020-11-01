@@ -26,25 +26,27 @@ def main() :
     print("Reading %i frames from %s..." % (to_read_from_audio_IR, filename_IR))
     signal_IR = audiofile_IR.read(to_read_from_audio_IR)
 
+    #print ("==",signal_input.shape)
+    #print ("==",signal_IR.shape)
 
-    print ("==",signal_input.shape)
-    print ("==",signal_IR.shape)
+    outputSampleCount = signal_input.shape[0] + signal_IR.shape[0] - 1
+    outputChannelCount = 1 if len(signal_input.shape)==1 else signal_input.shape[1]
 
-    conv_signals = []
+
+    conv_signals = np.ndarray((outputChannelCount, outputSampleCount))
+
+    #print(conv_signals.shape)
     channelCount = audiofile_input.channels
     for channel in range(channelCount) :
-        channel_signal_input = signal_input.transpose()[channel]  if audiofile_input.channels !=1 else signal_input #[f for (i,f) in enumerate(signal_input) if i % channelCount == channel]
-        channel_signal_IR = signal_IR.transpose()[channel] if audiofile_IR.channels != 1 else signal_IR  #[f for (i,f) in enumerate(signal_IR) if i % channelCount == channel] if audiofile_IR.channels != 1 else signal_IR
-        conv_signals += [fftconvolve(channel_signal_input,  channel_signal_IR,  mode="full")]
+        channel_signal_input = signal_input.transpose()[channel]  if audiofile_input.channels !=1 else signal_input
+        channel_signal_IR = signal_IR.transpose()[channel] if audiofile_IR.channels != 1 else signal_IR
+        conv_signals[channel] = fftconvolve(channel_signal_input,  channel_signal_IR,  mode="full")
         #open("conv_out.txt","w").write("\n".join(["%i: %f" % (i,f) for (i,f) in enumerate(conv)]))
 
 
-    outputfile = sf.SoundFile(filename_out, "w", audiofile_input.samplerate, audiofile_input.channels)
-    print("Writting %i frames to %s..." % (conv_signals[0].size, filename_out))
-    print(str(conv_signals[0].shape))
+    outputfile = sf.SoundFile(filename_out, "w", audiofile_input.samplerate, outputChannelCount)
+    print("Writting %i frames to %s..." % (outputSampleCount, filename_out))
     outputfile.write(np.array(conv_signals).transpose())
 
 if __name__ == "__main__" : main()
-
-
 
