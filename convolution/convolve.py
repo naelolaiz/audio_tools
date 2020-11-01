@@ -21,9 +21,9 @@ def main() :
 
     to_read_from_audio_input = audiofile_input.frames
     to_read_from_audio_IR = audiofile_IR.frames
-    print("Reading %i frames from %s..." % (to_read_from_audio_input, filename_input))
+    print("Reading %i frames in %i channel(s) from %s..." % (to_read_from_audio_input, audiofile_input.channels, filename_input))
     signal_input = audiofile_input.read(to_read_from_audio_input)
-    print("Reading %i frames from %s..." % (to_read_from_audio_IR, filename_IR))
+    print("Reading %i frames in %i channel(s) from %s..." % (to_read_from_audio_IR, audiofile_IR.channels, filename_IR))
     signal_IR = audiofile_IR.read(to_read_from_audio_IR)
 
     #print ("==",signal_input.shape)
@@ -45,7 +45,7 @@ def main() :
 
 
     outputfile = sf.SoundFile(filename_out, "w", audiofile_input.samplerate, outputChannelCount)
-    print("Writting %i frames to %s..." % (outputSampleCount, filename_out))
+    print("Writting %i channels of %i frames to %s..." % (outputChannelCount, outputSampleCount, filename_out))
     outputfile.write(np.array(conv_signals).transpose())
 
 if __name__ == "__main__" : main()
