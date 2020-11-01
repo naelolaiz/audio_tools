@@ -33,7 +33,7 @@ def main() :
         conv = abs(fftconvolve(channelSignal1,  channelSignal2Reverse,  mode="full"))
         #open("conv_out.txt","w").write("\n".join(["%i: %f" % (i,f) for (i,f) in enumerate(conv)]))
 
-        print("Max value index  for channel %i:  %i" % (channel, (toReadFromAudio2 - conv.argmax())))
+        print("Max value index for channel %i: %i" % (channel, (toReadFromAudio2 - conv.argmax())))
 
 if __name__ == "__main__" : main()
 
