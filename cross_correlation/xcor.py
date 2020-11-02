@@ -34,7 +34,8 @@ def main() :
         channel_signal_2_reverse = signal2_reverse.transpose()[channel] if channel_count>1 else signal2_reverse
         conv = abs(fftconvolve(channel_signal_1,  channel_signal_2_reverse,  mode="full"))
 #        #open("conv_out.txt","w").write("\n".join(["%i: %f" % (i,f) for (i,f) in enumerate(conv)]))
-        print("Max value index for channel %i: %i" % (channel, (to_read_from_audio_2 - conv.argmax())))
+        offset_found = to_read_from_audio_2 - conv.argmax()
+        print("Max value index for channel %i: %i (%s has a delay of %i samples with regard to %s)" % (channel, offset_found, filename2, offset_found, filename1))
 
 if __name__ == "__main__" : main()
 
